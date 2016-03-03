@@ -3,7 +3,7 @@ class TestClient {
 	public function new(){
 		var sock = new sys.ssl.Socket();
 		sock.setCertLocation( "cert/root.crt", "cert" );
-		//sock.useCertificate( "cert/client.crt", "cert/client.key" ); // TODO
+		sock.useCertificate( "cert/client.crt", "cert/client.key" );
 		sock.connect( new sys.net.Host("localhost"), 5566 );
 		sock.output.writeString("Ping");
 		sock.output.flush();
