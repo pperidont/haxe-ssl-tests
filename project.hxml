@@ -1,0 +1,3 @@
+-cp src
+-neko testssl.n
+-main Main
