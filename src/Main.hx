@@ -7,6 +7,7 @@ class Main {
 			case "client": new TestClient();
 			case "server": new TestServer();
 			case "certificate": new TestCert();
+			case "digest": new TestDigest();
 			default:
 				Sys.println("Unknown test");
 		}
