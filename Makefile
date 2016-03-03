@@ -1,4 +1,4 @@
-all: compile digest
+all: compile client
 
 compile:
 	haxe project.hxml
@@ -39,3 +39,9 @@ mkcert:
 	openssl req -batch -nodes -newkey rsa:2048 -sha256 -subj "/CN=$(NAME)" -keyout cert/$(NAME).key -out cert/$(NAME).csr
 	openssl x509 -req -in cert/$(NAME).csr -CA cert/root.crt -CAkey cert/root.key -CAcreateserial -sha256 -out cert/$(NAME).crt -days 365
 	rm cert/$(NAME).csr
+
+test_app_server:
+	openssl s_server -accept 5568 -cert cert/localhost.crt -key cert/localhost.key -CAfile cert/root.crt -verify_return_error -verify 0
+
+test_app_client:
+	openssl s_client -connect localhost:5568 -CAfile cert/root.crt -cert cert/client.crt -key cert/client.key
