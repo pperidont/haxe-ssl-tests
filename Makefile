@@ -19,9 +19,9 @@ prepare:
 	mkdir keys
 	mkdir cert
 	@make mkrootca
-	@make mkcert NAME=localhost
-	@make mkcert NAME=foo.bar
-	@make mkcert NAME=client
+	@make mkcert NAME=localhost SUBJECT="/CN=localhost"
+	@make mkcert NAME=foo.bar SUBJECT="/CN=foo.bar"
+	@make mkcert NAME=client SUBJECT="/C=FR/O=TestOrganization/CN=Test User/emailAddress=test@test.org"
 	@make prepare-keys
 
 prepare-keys:
@@ -36,7 +36,7 @@ mkrootca:
 	rm cert/root.csr
 
 mkcert:
-	openssl req -batch -nodes -newkey rsa:2048 -sha256 -subj "/CN=$(NAME)" -keyout cert/$(NAME).key -out cert/$(NAME).csr
+	openssl req -batch -nodes -newkey rsa:2048 -sha256 -subj "$(SUBJECT)" -keyout cert/$(NAME).key -out cert/$(NAME).csr
 	openssl x509 -req -in cert/$(NAME).csr -CA cert/root.crt -CAkey cert/root.key -CAcreateserial -sha256 -out cert/$(NAME).crt -days 365
 	rm cert/$(NAME).csr
 

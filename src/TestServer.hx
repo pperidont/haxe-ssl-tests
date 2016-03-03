@@ -11,7 +11,9 @@ class TestServer {
 		while( true ){
 			var s = s.accept();
 			var peer = s.peer();
-			Sys.println("New connection from: "+peer.host.toString()+":"+peer.port);
+			Sys.println("New connection from: " + peer.host.toString() + ":" + peer.port);
+			var peerCert = s.peerCertificate();
+			Sys.println("Client name="+peerCert.subject("CN")+" ("+peerCert.subject("O")+") email="+peerCert.subject("emailAddress")+" verified by "+peerCert.issuer("O"));
 			var str = s.input.readString(4);
 			Sys.println("Receive: "+str);
 			if( str == "Ping" ){
