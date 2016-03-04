@@ -1,4 +1,4 @@
-all: compile client
+all: compile errors
 
 compile:
 	haxe project.hxml
@@ -9,6 +9,12 @@ http:
 client:
 	neko testssl client
 
+client2:
+	neko testssl client2
+
+errors:
+	neko testssl errors
+
 certificate:
 	neko testssl certificate
 
@@ -16,12 +22,17 @@ digest:
 	neko testssl digest
 
 prepare:
+	rm -rf keys
+	rm -rf cert
 	mkdir keys
 	mkdir cert
-	@make mkrootca
-	@make mkcert NAME=localhost SUBJECT="/CN=localhost"
-	@make mkcert NAME=foo.bar SUBJECT="/CN=foo.bar"
-	@make mkcert NAME=client SUBJECT="/C=FR/O=TestOrganization/CN=Test User/emailAddress=test@test.org"
+	@make mkcacert NAME=root SUBJECT="/O=Test Dev CA"
+	@make mkcacert NAME=root2 SUBJECT="/O=Test Dev2 CA"
+	@make mkcert CA=root NAME=localhost SUBJECT="/CN=localhost"
+	@make mkcert CA=root NAME=foo.bar SUBJECT="/CN=foo.bar"
+	@make mkcert CA=root NAME=client SUBJECT="/C=FR/O=TestOrganization/CN=Test User/emailAddress=test@test.org"
+	@make mkcert CA=root2 NAME=unknown.bar SUBJECT="/CN=unknown.bar"
+	@make mkcert CA=root2 NAME=client2 SUBJECT="/C=FR/O=TestOrganization/CN=Test Unknown User/emailAddress=test2@test.org"
 	@make prepare-keys
 
 prepare-keys:
@@ -30,14 +41,15 @@ prepare-keys:
 	openssl pkey -in keys/private.der -inform DER -pubout -out keys/public.pem
 	echo -n 'Hello World!' | openssl dgst -sign keys/private.der -keyform DER > keys/hello_signature.bin -sha256
 
-mkrootca:
-	openssl req -batch -nodes -newkey rsa:2048 -sha256 -subj "/O=Test Dev CA" -keyout cert/root.key -out cert/root.csr
-	openssl x509 -req -in cert/root.csr -sha256 -signkey cert/root.key -out cert/root.crt -days 3650
-	rm cert/root.csr
-
-mkcert:
+mkcsr:
 	openssl req -batch -nodes -newkey rsa:2048 -sha256 -subj "$(SUBJECT)" -keyout cert/$(NAME).key -out cert/$(NAME).csr
-	openssl x509 -req -in cert/$(NAME).csr -CA cert/root.crt -CAkey cert/root.key -CAcreateserial -sha256 -out cert/$(NAME).crt -days 365
+
+mkcacert: mkcsr
+	openssl x509 -req -in cert/$(NAME).csr -sha256 -signkey cert/$(NAME).key -out cert/$(NAME).crt -days 3650
+	rm cert/$(NAME).csr
+
+mkcert: mkcsr
+	openssl x509 -req -in cert/$(NAME).csr -CA cert/$(CA).crt -CAkey cert/$(CA).key -CAcreateserial -sha256 -out cert/$(NAME).crt -days 365
 	rm cert/$(NAME).csr
 
 test_app_server:

@@ -5,6 +5,8 @@ class Main {
 		switch( args.shift() ){
 			case "http": new TestHttp();
 			case "client": new TestClient();
+			case "client2": new TestClient2();
+			case "errors": new TestErrors();
 			case "server": new TestServer();
 			case "certificate": new TestCert();
 			case "digest": new TestDigest();
