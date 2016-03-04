@@ -41,7 +41,7 @@ mkcert:
 	rm cert/$(NAME).csr
 
 test_app_server:
-	openssl s_server -accept 5566 -cert cert/localhost.crt -key cert/localhost.key -CAfile cert/root.crt -verify_return_error -verify 0
+	openssl s_server -accept 5566 -cert cert/localhost.crt -key cert/localhost.key -CAfile cert/root.crt -verify_return_error -verify 0 -servername foo.bar -cert2 cert/foo.bar.crt -key2 cert/foo.bar.key
 
 test_app_client:
 	openssl s_client -connect localhost:5566 -CAfile cert/root.crt -cert cert/client.crt -key cert/client.key
