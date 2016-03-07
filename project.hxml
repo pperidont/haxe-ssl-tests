@@ -1,3 +1,8 @@
 -cp src
 -neko testssl.n
 -main Main
+
+--next
+-cp src
+-cpp testssl_cpp
+-main Main

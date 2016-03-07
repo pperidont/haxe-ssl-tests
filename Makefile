@@ -1,4 +1,4 @@
-all: compile errors
+all: compile
 
 compile:
 	haxe project.hxml
