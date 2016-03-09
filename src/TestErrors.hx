@@ -21,6 +21,7 @@ class TestErrors {
 			sock.connect( new sys.net.Host("localhost"), 5566 );
 			
 			cert = sock.peerCertificate();
+			trace( cert.subject("CN") );
 			
 			sock.output.writeString("pong");
 			sock.output.flush();
@@ -36,7 +37,13 @@ class TestErrors {
 		}
 
 		try {
-			cert.subject("CN");
+			trace( cert.subject("CN") );
+		}catch( e : Dynamic ){
+			Sys.println("OK: "+Std.string(e)+"\nStack: "+haxe.CallStack.toString(haxe.CallStack.exceptionStack()));
+		}
+		
+		try {
+			trace( cert.notBefore );
 		}catch( e : Dynamic ){
 			Sys.println("OK: "+Std.string(e)+"\nStack: "+haxe.CallStack.toString(haxe.CallStack.exceptionStack()));
 		}
