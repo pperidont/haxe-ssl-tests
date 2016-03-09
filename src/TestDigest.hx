@@ -1,12 +1,9 @@
 class TestDigest {
 	
 	public function new(){
-		var privKey = sys.ssl.Key.readDER( sys.io.File.getBytes("keys/private.der"), false );
-		Sys.println("ok");
-		var privKey2 = sys.ssl.Key.readPEM( sys.io.File.getContent("keys/private.pem"), false, "testpassword" );
-		Sys.println("ok2");
-		var pubKey = sys.ssl.Key.readPEM( sys.io.File.getContent("keys/public.pem"), true );
-		Sys.println("ok3");
+		var privKey = sys.ssl.Key.loadFile( "keys/private.der", false );
+		var privKey2 = sys.ssl.Key.loadFile( "keys/private.pem", false, "testpassword" );
+		var pubKey = sys.ssl.Key.loadFile( "keys/public.pem", true );
 		
 		var data = haxe.io.Bytes.ofString("Hello World!");
 		var sign = sys.ssl.Digest.sign( data, privKey, SHA256 );

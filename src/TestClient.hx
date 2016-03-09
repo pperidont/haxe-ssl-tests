@@ -7,7 +7,7 @@ class TestClient {
 			Sys.println("Try to connect...");
 			var sock = new sys.ssl.Socket();
 			sock.setCA( Certificate.loadFile("cert/root.crt") );
-			sock.setCertificate( Certificate.loadFile("cert/client.crt"), Key.readPEM(sys.io.File.getContent("cert/client.key"), false) );
+			sock.setCertificate( Certificate.loadFile("cert/client.crt"), Key.loadFile("cert/client.key") );
 			sock.connect( new sys.net.Host("localhost"), 5566 );
 			var cert = sock.peerCertificate();
 			Sys.println( "Server CN=" + cert.commonName );
@@ -27,7 +27,7 @@ class TestClient {
 			Sys.println("Try to connect...");
 			var sock = new sys.ssl.Socket();
 			sock.setCA( Certificate.loadFile("cert/root.crt") );
-			sock.setCertificate( Certificate.loadFile("cert/client.crt"), Key.readPEM(sys.io.File.getContent("cert/client.key"), false) );
+			sock.setCertificate( Certificate.loadFile("cert/client.crt"), Key.loadFile("cert/client.key") );
 			sock.setHostname( "foo.bar" );
 			sock.connect( new sys.net.Host("localhost"), 5566 );
 			

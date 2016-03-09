@@ -1,9 +1,8 @@
 class TestHttp {
 
 	public function new() {
-		var ca = sys.ssl.Certificate.loadFile("cert/global.cer");
-		trace( ca.subject("CN") );
-		sys.ssl.Socket.setDefaultCA( ca );
+		sys.ssl.Socket.DEFAULT_CA = sys.ssl.Certificate.loadFile("cert/global.cer");
+		
 		var h = new haxe.Http("https://google.com");
 		h.onData = function(d){
 			Sys.print( d );
