@@ -1,3 +1,5 @@
+import sys.ssl.*;
+
 class TestClient2 {
 
 	public function new(){
@@ -6,8 +8,8 @@ class TestClient2 {
 		try {
 			Sys.println("Try to connect...");
 			var sock = new sys.ssl.Socket();
-			sock.setCertLocation( "cert/root.crt", "cert" );
-			sock.useCertificate( "cert/client.crt", "cert/client.key" );
+			sock.setCA( Certificate.loadFile("cert/root.crt") );
+			sock.setCertificate( Certificate.loadFile("cert/client.crt"), Key.readPEM(sys.io.File.getContent("cert/client.key"), false) );
 			sock.setHostname( "unknown.bar" );
 			sock.connect( new sys.net.Host("localhost"), 5566 );
 			
@@ -28,8 +30,8 @@ class TestClient2 {
 		try {
 			Sys.println("Try to connect...");
 			var sock = new sys.ssl.Socket();
-			sock.setCertLocation( "cert/root.crt", "cert" );
-			sock.useCertificate( "cert/client2.crt", "cert/client2.key" );
+			sock.setCA( Certificate.loadFile("cert/root.crt") );
+			sock.setCertificate( Certificate.loadFile("cert/client2.crt"), Key.readPEM(sys.io.File.getContent("cert/client2.key"), false) );
 			sock.connect( new sys.net.Host("localhost"), 5566 );
 			
 			var cert = sock.peerCertificate();

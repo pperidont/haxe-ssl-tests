@@ -1,15 +1,16 @@
+import sys.ssl.*;
+
 class TestServer {
 
 	public function new(){
 		var s = new sys.ssl.Socket();
+		
+		s.setCA( Certificate.loadFile("cert/root.crt") );
+		s.setCertificate( Certificate.loadFile("cert/localhost.crt"), Key.readPEM(sys.io.File.getContent("cert/localhost.key"), false) );
 
-		s.useCertificate( "cert/localhost.crt", "cert/localhost.key" );
-		s.setCipherList("EECDH+ECDSA+AESGCM EECDH+aRSA+AESGCM EECDH+ECDSA+SHA384 EECDH+ECDSA+SHA256 EECDH+aRSA+SHA384 EECDH+aRSA+SHA256 ECDHE-RSA-AES128-SHA AES128-SHA DES-CBC3-SHA EECDH EDH+aRSA !RC4 !aNULL !eNULL !LOW !MD5 !EXP !PSK !SRP !DSS", true);
+		s.addSNICertificate( function(s){ Sys.println("Client SNI="+s); return s == "foo.bar"; }, Certificate.loadFile("cert/foo.bar.crt"), Key.readPEM(sys.io.File.getContent("cert/foo.bar.key"), false) );
+		s.addSNICertificate( function(s) return s == "unknown.bar", Certificate.loadFile("cert/unknown.bar.crt"), Key.readPEM(sys.io.File.getContent("cert/unknown.bar.key"), false) );
 
-		s.addSNICertificate( function(s){ Sys.println("Client SNI="+s); return s == "foo.bar"; }, "cert/foo.bar.crt", "cert/foo.bar.key" );
-		s.addSNICertificate( function(s) return s == "unknown.bar", "cert/unknown.bar.crt", "cert/unknown.bar.key" );
-
-		s.setCertLocation( "cert/root.crt", "cert" );
 		s.bind( new sys.net.Host("localhost"), 5566 );
 		s.listen( 20 );
 		while( true ){

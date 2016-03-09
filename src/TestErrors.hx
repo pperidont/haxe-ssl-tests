@@ -1,3 +1,5 @@
+import sys.ssl.*;
+
 class TestErrors {
 
 	public function new(){
@@ -14,8 +16,8 @@ class TestErrors {
 
 		try {
 			sock = new sys.ssl.Socket();
-			sock.setCertLocation( "cert/root.crt", "cert" );
-			sock.useCertificate( "cert/client.crt", "cert/client.key" );
+			sock.setCA( Certificate.loadFile("cert/root.crt") );
+			sock.setCertificate( Certificate.loadFile("cert/client.crt"), Key.readPEM(sys.io.File.getContent("cert/client.key"), false) );
 			sock.connect( new sys.net.Host("localhost"), 5566 );
 			
 			cert = sock.peerCertificate();
