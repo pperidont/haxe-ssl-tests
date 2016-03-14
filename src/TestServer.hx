@@ -4,6 +4,10 @@ class TestServer {
 
 	public function new(){
 		var s = new sys.ssl.Socket();
+
+		#if neko
+		var keepalive = neko.Lib.load("std", "socket_set_keepalive",4);
+		#end
 		
 		s.setCA( Certificate.loadFile("cert/root.crt") );
 		s.setCertificate( Certificate.loadFile("cert/localhost.crt"), Key.readPEM(sys.io.File.getContent("cert/localhost.key"), false) );
@@ -17,6 +21,9 @@ class TestServer {
 			try {
 				Sys.println("Accept...");
 				var s = s.accept();
+				#if neko
+				keepalive( @:privateAccess s.__s, true, 60, 5 );
+				#end
 				var peer = s.peer();
 				Sys.print("New connection. From:"+peer.host.toString()+":"+peer.port);
 				var peerCert = s.peerCertificate();
