@@ -20,18 +20,20 @@ class TestServer {
 		while( true ){
 			try {
 				Sys.println("Accept...");
-				var s = s.accept();
+				var c = s.accept();
+				Sys.println("New connection! Handshaking...");
+				c.handshake();
 				#if neko
-				keepalive( @:privateAccess s.__s, true, 60, 5 );
+				keepalive( @:privateAccess c.__s, true, 60, 5 );
 				#end
-				var peer = s.peer();
-				Sys.print("New connection. From:"+peer.host.toString()+":"+peer.port);
-				var peerCert = s.peerCertificate();
-				Sys.println("Name="+peerCert.subject("CN")+", Org="+peerCert.subject("O")+", Email="+peerCert.subject("emailAddress")+", Verified by "+peerCert.issuer("O"));
-				var str = s.input.readString(4);
-				s.output.writeString( str.toUpperCase() );
-				s.output.flush();
-				s.close();
+				var peer = c.peer();
+				Sys.print("Peer:"+peer.host.toString()+":"+peer.port+". ");
+				var peerCert = c.peerCertificate();
+				Sys.println("PeerCert: Name="+peerCert.subject("CN")+", Org="+peerCert.subject("O")+", Email="+peerCert.subject("emailAddress")+", Verified by "+peerCert.issuer("O"));
+				var str = c.input.readString(4);
+				c.output.writeString( str.toUpperCase() );
+				c.output.flush();
+				c.close();
 			}catch( e : Dynamic ){
 				Sys.println("Error: "+Std.string(e)+"\nStack: "+haxe.CallStack.toString(haxe.CallStack.exceptionStack()));
 			}

@@ -13,8 +13,9 @@ class TestDigest {
 		Sys.println( 'sign='+haxe.crypto.Base64.encode(sign) );
 		Sys.println( 'verify='+sys.ssl.Digest.verify(data,sign,pubKey,SHA256) );
 		var validSign = sys.io.File.getBytes("keys/hello_signature.bin");
-		Sys.println( 'compare with valid sign=' + (sign.compare(validSign)==0) );
-
+		Sys.println( 'compare with valid sign=' + (sign.compare(validSign) == 0) );
+		
+		Sys.println("****** Message Digest ******");
 		var mds = [MD5, SHA1, SHA224, SHA256, SHA384, SHA512, RIPEMD160];
 		for( md in mds ){
 			Sys.println( StringTools.lpad(Std.string(md)," ",10)+": "+sys.ssl.Digest.make( data, md ).toHex() );
