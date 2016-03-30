@@ -10,6 +10,7 @@ class Main {
 			case "server": new TestServer();
 			case "certificate": new TestCert();
 			case "digest": new TestDigest();
+			case "threads": new TestThreads();
 			default:
 				Sys.println("Unknown test");
 		}
