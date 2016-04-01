@@ -50,6 +50,7 @@ mkcacert: mkcsr
 
 mkcert: mkcsr
 	openssl x509 -req -in cert/$(NAME).csr -CA cert/$(CA).crt -CAkey cert/$(CA).key -CAcreateserial -sha256 -out cert/$(NAME).crt -days 365
+	openssl x509 -in cert/$(NAME).crt -inform PEM -out cert/$(NAME).der -outform DER
 	rm cert/$(NAME).csr
 
 test_app_server:

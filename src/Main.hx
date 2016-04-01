@@ -11,6 +11,7 @@ class Main {
 			case "certificate": new TestCert();
 			case "digest": new TestDigest();
 			case "threads": new TestThreads();
+			case "gc": new TestGC();
 			default:
 				Sys.println("Unknown test");
 		}
