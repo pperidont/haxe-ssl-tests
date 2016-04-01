@@ -17,6 +17,9 @@ class TestServer {
 
 		s.bind( new sys.net.Host("localhost"), 5566 );
 		s.listen( 20 );
+
+		var bufsize = 1024;
+		var b = haxe.io.Bytes.alloc( bufsize );
 		while( true ){
 			try {
 				Sys.println("Accept...");
@@ -30,8 +33,11 @@ class TestServer {
 				Sys.print("Peer:"+peer.host.toString()+":"+peer.port+". ");
 				var peerCert = c.peerCertificate();
 				Sys.println("PeerCert: Name="+peerCert.subject("CN")+", Org="+peerCert.subject("O")+", Email="+peerCert.subject("emailAddress")+", Verified by "+peerCert.issuer("O"));
-				var str = c.input.readString(4);
-				c.output.writeString( str.toUpperCase() );
+				
+				var l = c.input.readBytes( b, 0, bufsize );
+				var msg = b.sub(0,l).toString();
+				Sys.println("Client message: "+msg);
+				c.output.writeString( msg.toUpperCase() );
 				c.output.flush();
 				c.close();
 			}catch( e : Dynamic ){

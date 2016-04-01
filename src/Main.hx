@@ -5,9 +5,11 @@ class Main {
 		switch( args.shift() ){
 			case "http": new TestHttp();
 			case "client": new TestClient();
+			case "netClient": new TestNetClient();
 			case "client2": new TestClient2();
 			case "errors": new TestErrors();
 			case "server": new TestServer();
+			case "netServer": new TestNetServer();
 			case "certificate": new TestCert();
 			case "digest": new TestDigest();
 			case "threads": new TestThreads();

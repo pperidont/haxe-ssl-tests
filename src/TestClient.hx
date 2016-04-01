@@ -3,6 +3,9 @@ import sys.ssl.*;
 class TestClient {
 
 	public function new(){
+		var len = 1024;
+		var b = haxe.io.Bytes.alloc(len);
+
 		try {
 			Sys.println("Try to connect...");
 			var sock = new sys.ssl.Socket();
@@ -14,7 +17,9 @@ class TestClient {
 			
 			sock.output.writeString("ping");
 			sock.output.flush();
-			Sys.println( "Server response: " + sock.input.readString(4) );
+			var l = sock.input.readBytes(b,0,len);
+			var resp = b.sub(0,l).toString();
+			Sys.println( "Server response: " + resp );
 			sock.close();
 		}catch( e : Dynamic ){
 			Sys.println("Error: "+Std.string(e)+"\nStack: "+haxe.CallStack.toString(haxe.CallStack.exceptionStack()));
@@ -34,9 +39,13 @@ class TestClient {
 			var cert = sock.peerCertificate();
 			Sys.println( "Server CN=" + cert.commonName );
 			
-			sock.output.writeString("pong");
+			sock.output.writeString("Hello");
 			sock.output.flush();
-			Sys.println( "Server response: " + sock.input.readString(4) );
+			sock.output.writeString(" World!");
+			sock.output.flush();
+			var l = sock.input.readBytes(b,0,len);
+			var resp = b.sub(0,l).toString();
+			Sys.println( "Server response: " + resp );
 			sock.close();
 		}catch( e : Dynamic ){
 			Sys.println("Error: "+Std.string(e)+"\nStack: "+haxe.CallStack.toString(haxe.CallStack.exceptionStack()));
