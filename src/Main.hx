@@ -1,7 +1,13 @@
 class Main {
 
 	static function main(){
-		var args = Sys.args();
+		var args : Array<String>;
+		#if neko
+		if ( neko.Web.isModNeko )
+			args = [neko.Web.getParams().get("test")];
+		else
+		#end
+			args = Sys.args();
 		switch( args.shift() ){
 			case "http": new TestHttp();
 			case "client": new TestClient();
