@@ -3,6 +3,9 @@ all: compile
 compile:
 	haxe project.hxml
 
+compile-debug:
+	haxe project.hxml -debug
+
 http:
 	neko testssl http
 
@@ -58,3 +61,7 @@ test_app_server:
 
 test_app_client:
 	openssl s_client -connect localhost:5566 -CAfile cert/root.crt -cert cert/client.crt -key cert/client.key
+
+clean:
+	rm -f testssl.n
+	rm -rf testssl_cpp
