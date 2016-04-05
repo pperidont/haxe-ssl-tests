@@ -1,4 +1,4 @@
-import sys.ssl.Digest.DigestAlgorithm;
+import sys.ssl.DigestAlgorithm;
 
 class TestDigest {
 	
