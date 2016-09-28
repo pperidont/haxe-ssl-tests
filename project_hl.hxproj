@@ -25,7 +25,7 @@
     <option noInlineOnDebug="False" />
     <option mainClass="Main" />
     <option enabledebug="False" />
-    <option additional="-hl testssl.hl" />
+    <option additional="-hl testssl.hl&#xA;&#xA;--next&#xA;-cp src&#xA;-main Main&#xA;-hl testssl.c" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>

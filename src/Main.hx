@@ -18,8 +18,10 @@ class Main {
 			case "netServer": new TestNetServer();
 			case "certificate": new TestCert();
 			case "digest": new TestDigest();
+			#if (neko || cpp)
 			case "threads": new TestThreads();
 			case "gc": new TestGC();
+			#end
 			default:
 				Sys.println("Unknown test");
 		}
